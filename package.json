@@ -1,0 +1,6 @@
+{
+  "name": "padel-americano",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test", "start": "node serve.js" }
+}
