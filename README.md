@@ -1,3 +1,5 @@
+https://ezbutd.github.io/padel-americano/
+
 # Court & Company — Padel Americano
 
 A buildless static site for a one-court padel session. Select 4–9 players (default: 6), name players, select the active round, advance to the next pairing, and optionally enter both team scores. The individual leaderboard ranks by `(wins + ties / 2) / played`, then total games won (the sum of individual team scores across completed matches, including losses and ties). Each round is one match; the score records games won. Resting players and incomplete scores do not count. Sessions for each player count save separately in browser local storage.
@@ -5,10 +7,6 @@ A buildless static site for a one-court padel session. Select 4–9 players (def
 ## GitHub Pages
 
 Push these files to your GitHub repository. Under **Settings → Pages**, choose **Deploy from a branch**, select your branch and **/ (root)**, then save. No build, dependencies, server, or environment variables are required. Relative asset paths work on repository Pages URLs. `.nojekyll` bypasses Jekyll processing.
-
-## Preview and checks
-
-With Node.js installed, run `npm start` and open http://127.0.0.1:4173. Run `npm test` for rotation validity and scoring checks. Google Fonts are optional; system fonts work without them.
 
 ## Rotation source
 
