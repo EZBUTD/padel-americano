@@ -1,4 +1,4 @@
-// Tap to type; hold still for 400ms, then slide 16px per score point.
+// Tap to type; hold still for 400ms, then slide vertically 16px per score point.
 export function attachScoreScrubbing(container, indicator) {
   let gesture = null;
   let suppressClick = false;
@@ -32,7 +32,7 @@ export function attachScoreScrubbing(container, indicator) {
       g.active = true;
       input.blur();
       input.classList.add('scrubbing');
-      indicator.textContent = `${g.base} · Slide left − / right +`;
+      indicator.textContent = `${g.base} · Slide up + / down −`;
       indicator.hidden = false;
     }, 400);
   });
@@ -44,8 +44,8 @@ export function attachScoreScrubbing(container, indicator) {
       return;
     }
     event.preventDefault();
-    const value = String(Math.max(0, Math.min(999, g.base + Math.round((event.clientX - g.x) / 16))));
-    indicator.textContent = `${value} · Slide left − / right +`;
+    const value = String(Math.max(0, Math.min(999, g.base + Math.round((g.y - event.clientY) / 16))));
+    indicator.textContent = `${value} · Slide up + / down −`;
     if (g.input.value !== value) {
       g.input.value = value;
       g.input.dispatchEvent(new Event('input', { bubbles: true }));

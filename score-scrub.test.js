@@ -29,19 +29,21 @@ test('A short tap focuses score input without changing its value', t => {
   assert.equal(ui.indicator.hidden, true);
 });
 
-test('Holding and sliding updates scores in both directions within bounds', t => {
+test('Holding and sliding vertically updates scores in both directions within bounds', t => {
   const ui = setup(t, '6');
   ui.fire('pointerdown'); t.mock.timers.tick(400);
   assert.equal(ui.indicator.hidden, false);
-  ui.fire('pointermove', 148); assert.equal(ui.input.value, '9');
-  ui.fire('pointermove', 68); assert.equal(ui.input.value, '4');
-  ui.fire('pointermove', -1000); assert.equal(ui.input.value, '0');
-  ui.fire('pointermove', 20000); assert.equal(ui.input.value, '999');
+  ui.fire('pointermove', 200, 100);
+  assert.equal(ui.input.value, '6', 'Horizontal movement must not change the score');
+  ui.fire('pointermove', 100, 52); assert.equal(ui.input.value, '9');
+  ui.fire('pointermove', 100, 132); assert.equal(ui.input.value, '4');
+  ui.fire('pointermove', 100, 20000); assert.equal(ui.input.value, '0');
+  ui.fire('pointermove', 100, -20000); assert.equal(ui.input.value, '999');
   ui.fire('pointerup'); assert.equal(ui.indicator.hidden, true);
   assert.equal(ui.input.focused, false);
 });
 
-test('Scrolling before the hold cancels scrubbing without focusing the input', t => {
+test('Moving before the hold cancels scrubbing without focusing the input', t => {
   const ui = setup(t);
   ui.fire('pointerdown'); ui.fire('pointermove', 100, 120);
   t.mock.timers.tick(500); ui.fire('pointerup');
@@ -53,7 +55,7 @@ test('Scrolling before the hold cancels scrubbing without focusing the input', t
 test('Cancelled scrubbing restores an empty score rather than scoring a zero', t => {
   const ui = setup(t);
   ui.fire('pointerdown'); t.mock.timers.tick(400);
-  ui.fire('pointermove', 148); assert.equal(ui.input.value, '3');
+  ui.fire('pointermove', 100, 52); assert.equal(ui.input.value, '3');
   ui.fire('pointercancel'); assert.equal(ui.input.value, '');
   assert.deepEqual(ui.values, ['3', '']);
 });

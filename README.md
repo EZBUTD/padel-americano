@@ -18,4 +18,4 @@ Push these files to your GitHub repository. Under **Settings → Pages**, choose
 
 The six-player column's round 39 appears to repeat player 5 (`5 + 6 vs 4 + 5`). The app substitutes resting player 1 (`5 + 6 vs 4 + 1`), explicitly disclosed below the rotation. This is an interpretation, not a confirmed transcription; edit the entry if a clearer source is available.
 
-Scores accept whole numbers from 0 to 999, including 0–0 ties. Selecting or advancing a round does not create a result. Reset clears the selected session's player names and scores and returns to round 1. Tap a score to type, or hold for 400ms and slide left/right to adjust it (16px per point, from 0 to 999). Saved sessions are local to the current browser and site URL.
+Scores accept whole numbers from 0 to 999, including 0–0 ties. Selecting or advancing a round does not create a result. Reset clears the selected session's player names and scores and returns to round 1. Tap a score to type, or hold for 400ms and slide up/down (up increases, down decreases) to adjust it (16px per point, from 0 to 999). Saved sessions are local to the current browser and site URL.
