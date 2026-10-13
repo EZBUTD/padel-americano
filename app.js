@@ -1,6 +1,8 @@
 import { getRounds, standings } from './rotations.js';
+import { attachScoreScrubbing } from './score-scrub.js';
 
 const $ = id => document.getElementById(id);
+const cancelScoreScrub = attachScoreScrubbing($('rounds'), $('score-scrub-status'));
 const key = 'court-company-v1';
 let data = { count: 6, sessions: {} };
 try {
@@ -25,7 +27,6 @@ function load() {
   if (!session || !Array.isArray(session.names) || !Array.isArray(session.scores)) session = data.sessions[data.count] = { names: [], scores: [], active: 0 };
   session.active = Number.isInteger(session.active) ? Math.max(0, Math.min(rounds.length - 1, session.active)) : 0;
   $('player-count').value = data.count;
-  $('rotation-note').textContent = data.count === 6 ? 'Photo clarification: round 39 appears to list player 5 twice. This session uses 5 + 6 vs 4 + 1 so four different players can play.' : '';
   $('players').innerHTML = Array.from({ length: data.count }, (_, i) => `<label class="player-field"><span class="number">${i + 1}</span><input data-player="${i}" aria-label="Player ${i + 1} name" maxlength="30" placeholder="Player ${i + 1}" value="${escape(session.names[i] || '')}"></label>`).join('');
   render();
 }
@@ -34,12 +35,13 @@ function renderCurrent() {
   $('current-round').textContent = `ROUND ${session.active + 1} / ${rounds.length}`;
   $('current-match').innerHTML = match(round);
   const resting = Array.from({ length: data.count }, (_, i) => i + 1).filter(id => ![...round.a, ...round.b].includes(id));
-  $('resting').textContent = resting.length ? `Taking a breather: ${resting.map(name).join(', ')}` : 'Everyone’s on court.';
+  $('resting').textContent = resting.length ? `Resting: ${resting.map(name).join(', ')}` : 'Everyone’s on court.';
   $('next').disabled = session.active === rounds.length - 1;
   $('next').innerHTML = session.active === rounds.length - 1 ? 'Last round reached' : 'Next round <span>→</span>';
   $('up-next').innerHTML = session.active + 1 < rounds.length ? `<span class="eyebrow">UP NEXT · ${session.active + 2}</span><span>${escape(rounds[session.active + 1].a.map(name).join(' + '))} <span class="versus">vs</span> ${escape(rounds[session.active + 1].b.map(name).join(' + '))}</span>` : '<span>Rotation complete. Reset the session to play again.</span>';
 }
 function renderRounds() {
+  cancelScoreScrub();
   const limit = expanded ? rounds.length : Math.min(rounds.length, Math.max(8, session.active + 2));
   $('rounds').innerHTML = rounds.slice(0, limit).map((round, i) => {
     const score = session.scores[i] || ['', ''];
@@ -54,12 +56,9 @@ function renderStandings() {
     if (i && (p.rate !== ranked[i - 1].rate || p.gamesWon !== ranked[i - 1].gamesWon)) rank = i + 1;
     return `<tr><td class="rank">${p.played ? String(rank).padStart(2, '0') : '–'}</td><th scope="row">${person(p.id)}</th><td>${p.played}</td><td>${p.wins}</td><td>${p.draws}</td><td>${p.losses}</td><td>${p.gamesWon}</td><td class="rate">${p.played ? `${Math.round(p.rate * 100)}<small>%</small>` : '–'}</td></tr>`;
   }).join('');
-  const completed = session.scores.filter(s => s && s.length === 2 && s.every(v => v !== '' && Number.isInteger(Number(v)) && Number(v) >= 0)).length;
-  $('progress').textContent = `${completed} / ${rounds.length} scored`;
-  $('leaderboard-note').textContent = completed ? 'Only matches with both scores entered count toward standings.' : 'The first score starts the story. Enter both team scores to see the standings.';
 }
 function render() { renderCurrent(); renderRounds(); renderStandings(); }
-$('player-count').addEventListener('change', event => { data.count = Number(event.target.value); expanded = false; load(); save(); });
+$('player-count').addEventListener('change', event => { cancelScoreScrub(); data.count = Number(event.target.value); expanded = false; load(); save(); });
 $('players').addEventListener('input', event => {
   if (!event.target.matches('[data-player]')) return;
   session.names[Number(event.target.dataset.player)] = event.target.value;
@@ -84,5 +83,5 @@ $('next').addEventListener('click', () => { if (session.active < rounds.length -
 $('show-all').addEventListener('click', () => { expanded = !expanded; renderRounds(); });
 $('reset').addEventListener('click', () => $('reset-dialog').showModal());
 $('cancel-reset').addEventListener('click', () => $('reset-dialog').close());
-$('confirm-reset').addEventListener('click', () => { session.scores = []; session.active = 0; expanded = false; render(); save(); $('reset-dialog').close(); });
+$('confirm-reset').addEventListener('click', () => { cancelScoreScrub(); session.names = []; session.scores = []; session.active = 0; expanded = false; load(); save(); $('reset-dialog').close(); });
 load();

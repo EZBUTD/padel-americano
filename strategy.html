@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163e36">
+  <title>Strategy board · Court & Company</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="strategy.css">
+  <script type="module" src="strategy.js"></script>
+</head>
+<body>
+  <header class="masthead"><a href="./" class="brand"><span class="brand-icon">↗</span> court & company<span class="brand-dot">●</span></a></header>
+  <nav class="app-nav" aria-label="App pages"><a href="./">Rotation planner</a><a href="strategy.html" aria-current="page">Strategy board</a></nav>
+  <main>
+    <section class="board-layout" aria-label="Padel strategy whiteboard">
+      <div class="court-stage">
+        <svg id="board" viewBox="0 0 400 800" role="group" aria-label="Bird’s-eye padel court with movable players" data-tool="pen">
+          <defs><filter id="token-shadow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity=".35"/></filter></defs>
+          <rect width="400" height="800" fill="#1c4866"/>
+          <path d="M0 272H400V528H0Z" fill="#255773"/>
+          <g fill="none" stroke="#d5e4e8" stroke-width="3"><rect x="2" y="2" width="396" height="796"/><path d="M0 272H400M0 528H400M200 0V272M200 528V800"/></g>
+          <path d="M0 400H400" stroke="#f0f4eb" stroke-width="4" stroke-dasharray="8 5"/>
+          <g id="drawings" fill="none" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="tokens"></g>
+        </svg>
+      </div>
+      <aside class="panel board-tools" aria-label="Board controls">
+        <div class="board-toolbar">
+          <button id="eraser" class="more-button" aria-pressed="false">Eraser</button>
+          <button id="undo" class="more-button">Undo</button>
+          <button id="redo" class="more-button">Redo</button>
+        </div>
+        <details class="board-options">
+          <summary>Board options</summary>
+          <div class="board-options-content">
+            <label class="board-label" for="ink">Line color <input id="ink" type="color" value="#f4e994"></label>
+            <label class="board-label" for="width">Line width <select id="width"><option value="3">Fine</option><option value="6" selected>Medium</option><option value="10">Bold</option></select></label>
+            <button id="clear-lines" class="more-button">Clear drawings</button>
+            <button id="reset-players" class="more-button">Reset player positions</button>
+          </div>
+        </details>
+      </aside>
+    </section>
+    <p id="board-status" class="save-status" role="status"></p>
+  </main>
+  
+</body>
+</html>
